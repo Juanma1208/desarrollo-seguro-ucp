@@ -113,7 +113,10 @@ def ask_ai(report):
             base + "/chat/completions", data=json.dumps(payload).encode("utf-8"),
             method="POST",
             headers={"Authorization": "Bearer " + key,
-                     "Content-Type": "application/json"})
+                     "Content-Type": "application/json",
+                     # Cloudflare (Groq) bloquea el UA por defecto "Python-urllib"
+                     # con HTTP 403 / error code 1010.
+                     "User-Agent": "seclab-gate/1.0"})
         with urllib.request.urlopen(req, timeout=90) as r:
             data = json.loads(r.read().decode("utf-8"))
         # Solo el `content` final; el reasoning_content es borrador, no se publica.
